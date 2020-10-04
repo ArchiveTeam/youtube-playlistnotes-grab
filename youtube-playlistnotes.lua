@@ -203,7 +203,6 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     html = read_file(file)
     if string.match(url, "/browse_ajax%?") then
       local data = load_json_file(html)
-print('check')
       if not data or not data["content_html"] or data["reload"] or data["errors"] then
         io.stdout:write("Bad browse_ajax response.\n")
         io.stdout:flush()
