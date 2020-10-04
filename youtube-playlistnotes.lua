@@ -1,5 +1,6 @@
 dofile("table_show.lua")
 dofile("urlcode.lua")
+JSON = (loadfile "JSON.lua")()
 local urlparse = require("socket.url")
 local http = require("socket.http")
 
@@ -21,6 +22,14 @@ local client_name = nil
 
 for ignore in io.open("ignore-list", "r"):lines() do
   downloaded[ignore] = true
+end
+
+load_json_file = function(file)
+  if file then
+    return JSON:decode(file)
+  else
+    return nil
+  end
 end
 
 read_file = function(file)
@@ -193,6 +202,13 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   if allowed(url, nil) and status_code == 200 then
     html = read_file(file)
     if string.match(url, "/browse_ajax%?") then
+      local data = load_json_file(html)
+print('check')
+      if not data or not data["content_html"] or data["reload"] or data["errors"] then
+        io.stdout:write("Bad browse_ajax response.\n")
+        io.stdout:flush()
+        abortgrab = true
+      end
       html = string.gsub(html, "\\", "")
     end
     local match_client_version = string.match(html, 'INNERTUBE_CONTEXT_CLIENT_VERSION%s*:%s*"([^"]+)"')
