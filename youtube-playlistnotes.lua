@@ -243,7 +243,8 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
 end
 
 wget.callbacks.write_to_warc = function(url, http_stat)
-  if http_stat["statcode"] ~= 200 and http_stat["statcode"] ~= 404 then
+  if http_stat["statcode"] ~= 200 and http_stat["statcode"] ~= 404
+    and http_stat["statcode"] ~= 303 then
     return false
   end
   return true
@@ -255,6 +256,15 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   url_count = url_count + 1
   io.stdout:write(url_count .. "=" .. status_code .. " " .. url["url"] .. "  \n")
   io.stdout:flush()
+
+  if status_code == 303 then
+    local newloc = urlparse.absolute(url["url"], http_stat["newloc"])
+    if not string.match(newloc, "error%?src=404") then
+      abortgrab = true
+    else
+      return wget.actions.EXIT
+    end
+  end
   
   if status_code >= 200 and status_code <= 399 then
     downloaded[url["url"]] = true
@@ -266,7 +276,7 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
     return wget.actions.ABORT
   end
 
-  if status_code ~= 200 and status_code ~= 404 then
+  if status_code ~= 200 and status_code ~= 404 and status_code ~= 303 then
     io.stdout:write("Server returned " .. http_stat.statcode .. " (" .. err .. "). Sleeping.\n")
     io.stdout:flush()
     local maxtries = 12
