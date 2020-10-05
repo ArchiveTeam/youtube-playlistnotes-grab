@@ -51,7 +51,7 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20201004.06'
+VERSION = '20201005.01'
 USER_AGENT = 'Archive Team'
 TRACKER_ID = 'youtube-playlistnotes'
 TRACKER_HOST = 'trackerproxy.archiveteam.org'
