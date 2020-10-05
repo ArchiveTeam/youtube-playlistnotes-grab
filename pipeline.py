@@ -51,7 +51,7 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20201005.02'
+VERSION = '20201005.03'
 USER_AGENT = 'Archive Team'
 TRACKER_ID = 'youtube-playlistnotes'
 TRACKER_HOST = 'trackerproxy.archiveteam.org'
@@ -242,12 +242,12 @@ class WgetArgs(object):
                 '--warc-header', 'youtube-playlistnotes-type: archive'
             ])
             base = 'https://www.youtube.com/playlist?list=' + item_value
-            trues = ('1', 'true')
+            trues = ('1')#, 'true')
             for s1 in trues:
                 partial = base + '&disable_polymer=' + s1
                 wget_args.append(partial)
-                for s2 in trues:
-                    wget_args.append(partial + '&advanced_settings=' + s2)
+            #    for s2 in trues:
+            #        wget_args.append(partial + '&advanced_settings=' + s2)
         elif item_type in ('c', 'channel', 'user', 'profile'):
             wget_args.extend([
                 '--warc-header', 'youtube-playlistnotes-{}: {}'
