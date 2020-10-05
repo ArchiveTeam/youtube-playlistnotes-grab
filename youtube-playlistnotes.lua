@@ -243,7 +243,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
 end
 
 wget.callbacks.write_to_warc = function(url, http_stat)
-  if http_stat["statcode"] ~= 200 and http_stat["statcode"] ~= 302 then
+  if http_stat["statcode"] ~= 200 and http_stat["statcode"] ~= 404 then
     return false
   end
   return true
