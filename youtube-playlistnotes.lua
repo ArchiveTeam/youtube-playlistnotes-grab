@@ -138,14 +138,18 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     url_ = string.gsub(url_, "&amp;", "&")
     url_ = string.gsub(url_, "sort=[a-z]+&?", "")
     url_ = string.gsub(url_, "flow=[a-z]+&?", "")
-    if (string.match(url_, "/channels") or string.match(url_, "/playlists"))
-      and not string.match(url_, "disable_polymer") then
+    --url_ = string.gsub(url_, "/featured", "/Featured")
+    --url_ = string.gsub(url_, "/videos", "/Videos")
+    url_ = string.gsub(url_, "/channels", "/Channels")
+    --url_ = string.gsub(url_, "/about", "/About")
+    if (string.match(url_, "/Channels") or string.match(url_, "/playlists"))
+      and not string.match(url_, "pbj=") then
       if not string.match(url_, "%?") then
         url_ = url_ .. "?"
       elseif not string.match(url_, "&$") then
         url_ = url_ .. "&"
       end
-      url_ = url_ .. "disable_polymer=1"
+      url_ = url_ .. "pbj=1"
     end
     if (downloaded[url_] ~= true and addedtolist[url_] ~= true)
       and allowed(url_, origurl) then
