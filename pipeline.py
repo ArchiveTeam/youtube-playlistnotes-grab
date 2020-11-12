@@ -54,7 +54,7 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20201031.01'
+VERSION = '20201112.01'
 USER_AGENT = 'Archive Team'
 TRACKER_ID = 'youtube-playlistnotes'
 TRACKER_HOST = 'trackerproxy.archiveteam.org'
@@ -242,26 +242,30 @@ class WgetArgs(object):
         if item_type == 'playlist':
             wget_args.extend([
                 '--warc-header', 'youtube-playlistnotes-playlist: ' + item_value,
-                '--warc-header', 'youtube-playlistnotes-type: archive'
+                '--warc-header', 'youtube-playlistnotes-type: archive',
+                '--header', 'X-YouTube-Client-Name: 1',
+                '--header', 'X-YouTube-Client-Version: 1.20200731.02.01'
             ])
             base = 'https://www.youtube.com/playlist?list=' + item_value
-            trues = ('1')#, 'true')
-            for s1 in trues:
-                partial = base + '&disable_polymer=' + s1
-                wget_args.append(partial)
+            #trues = ('1')#, 'true')
+            #for s1 in trues:
+            partial = base + '&pbj=1'
+            wget_args.append(partial)
             #    for s2 in trues:
             #        wget_args.append(partial + '&advanced_settings=' + s2)
         elif item_type in ('c', 'channel', 'user', 'profile'):
             wget_args.extend([
                 '--warc-header', 'youtube-playlistnotes-{}: {}'
                 .format(item_type, item_value),
-                '--warc-header', 'youtube-playlistnotes-type: discovery'
+                '--warc-header', 'youtube-playlistnotes-type: discovery',
+                '--header', 'X-YouTube-Client-Name: 1',
+                '--header', 'X-YouTube-Client-Version: 1.20200731.02.01'
             ])
             if item_type == 'profile':
                 extra = ''
             else:
                 extra = item_type + '/'
-            wget_args.append('https://www.youtube.com/{}{}?disable_polymer=1'
+            wget_args.append('https://www.youtube.com/{}{}/playlists?pbj=1'
                              .format(extra, item_value))
         else:
             raise ValueError('item_type not supported.')
